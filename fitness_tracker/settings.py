@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'users',
     'workouts',
     'exercises',
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'goals',
     'progress',
     'workout_types',
+    'activities',
 ]
 
 MIDDLEWARE = [
@@ -77,6 +79,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'fitness_tracker.wsgi.application'
 
+
+REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.OrderingFilter",
+        "est_framework.filters.SearchFilter",
+           "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination", "PAGE_SIZE": 20
+           "EXCEPTION_HANDLER": "core.exceptions.custom_exception_handler",
+        ],
+    
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -122,6 +135,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+
 
 STATIC_URL = 'static/'
 
