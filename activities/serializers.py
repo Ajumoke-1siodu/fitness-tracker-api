@@ -1,6 +1,7 @@
+# activities/serializers.py
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -22,6 +23,21 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data.get('email'),
             password=validated_data['password']
         )
-        Token.objects.create(user=user)
+
+        # Generate JWT tokens for the new user
+        refresh = RefreshToken.for_user(user)
+        self.tokens = {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
+
         return user
+
+    def to_representation(self, instance):
+        """
+        Customize the response after registration to include tokens.
+        """
+        data = super().to_representation(instance)
+        data.update(self.tokens)
+        return data
 
